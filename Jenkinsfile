@@ -33,7 +33,7 @@ pipeline{
                     withSonarQubeEnv('sonarqube'){
                         sh '''mvn clean package org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar \
                         -Dsonar.projectKey=nithinande-salohitech \
-                        -Dsonar.organization=NithinAnde-SalohiTech \
+                        -Dsonar.organization=nithinande-salohitech \
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.login=$SONAR_TOKEN '''
                     }
