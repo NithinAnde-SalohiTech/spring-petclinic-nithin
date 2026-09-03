@@ -3,6 +3,7 @@ pipeline{
     tools{
         jdk 'JAVA'
         maven 'MAVEN'
+        docker 'docker'
     }
 
     stages{
@@ -39,6 +40,33 @@ pipeline{
                     }
                 }
             }
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    docker build \
+                    -t yourdockerhubusername/spring-petclinic:latest .
+                '''
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([
+            string(
+                credentialsId: 'DOCKER_ID',
+                variable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh '''
+                echo "$DOCKER_PASSWORD" | docker login \
+                    -u "nithinandedocker" \
+                    --password-stdin
+
+                docker push nithinandedocker/spring-petclinic:latest
+            '''
         }
     }
+}
+    }
+}
 }
