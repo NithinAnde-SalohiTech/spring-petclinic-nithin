@@ -47,7 +47,7 @@ pipeline {
                 ]) {
                     withSonarQubeEnv('sonarqube') {
                         sh '''
-                            mvn sonar:sonar \
+                            mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar
                                 -Dsonar.projectKey=nithinande-salohitech \
                                 -Dsonar.organization=nithinande-salohitech \
                                 -Dsonar.host.url=https://sonarcloud.io \
