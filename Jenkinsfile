@@ -1,8 +1,9 @@
+```groovy
 pipeline {
     agent any
 
     environment {
-    APP_EC2_IP = '15.207.71.7'
+        APP_EC2_IP = '15.207.71.7'
     }
 
     tools {
@@ -37,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('Build and Sonar Scan') {
+        stage('Sonar Scan') {
             steps {
                 withCredentials([
                     string(
@@ -47,8 +48,7 @@ pipeline {
                 ]) {
                     withSonarQubeEnv('sonarqube') {
                         sh '''
-                            mvn clean package \
-                                org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar \
+                            mvn sonar:sonar \
                                 -Dsonar.projectKey=nithinande-salohitech \
                                 -Dsonar.organization=nithinande-salohitech \
                                 -Dsonar.host.url=https://sonarcloud.io \
@@ -106,7 +106,7 @@ pipeline {
                                 docker rm spring-petclinic || true &&
                                 docker run -d \
                                     --name spring-petclinic \
-                                    -p 8080:8080 \
+                                    -p 8080:8081 \
                                     nithinandedocker/spring-petclinic:latest
                             "
                     '''
@@ -115,3 +115,4 @@ pipeline {
         }
     }
 }
+```
