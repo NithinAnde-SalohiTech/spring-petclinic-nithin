@@ -106,7 +106,7 @@ pipeline {
                                 docker rm spring-petclinic || true &&
                                 docker run -d \
                                     --name spring-petclinic \
-                                    -p 8080:8080 \
+                                    -p 8080:8081 \
                                     nithinandedocker/spring-petclinic:latest
                             "
                     '''
