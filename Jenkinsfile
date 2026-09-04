@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+    APP_EC2_IP = '15.207.71.7'
+    }
+
     tools {
         jdk 'JAVA'
         maven 'MAVEN'
@@ -78,6 +82,33 @@ pipeline {
                             --password-stdin
 
                         docker push nithinandedocker/spring-petclinic:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'APP_EC2_SSH',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no \
+                            -i "$SSH_KEY" \
+                            "$SSH_USER@$APP_EC2_IP" \
+                            "
+                                docker pull nithinandedocker/spring-petclinic:latest &&
+                                docker stop spring-petclinic || true &&
+                                docker rm spring-petclinic || true &&
+                                docker run -d \
+                                    --name spring-petclinic \
+                                    -p 8080:8080 \
+                                    nithinandedocker/spring-petclinic:latest
+                            "
                     '''
                 }
             }
